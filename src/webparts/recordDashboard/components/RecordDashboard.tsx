@@ -17,6 +17,7 @@ import "react-tabs/style/react-tabs.css";
 import ModalEditRecord from "./modal-edit-record";
 import { SPOperations } from "../Services/SPServices";
 //import { useForm } from "react-hook-form";
+import { English, AMHARIC } from "./words";
 
 export interface TableItems {
   physicalLoctionListTiltle: any[];
@@ -63,6 +64,7 @@ export interface TableItems {
   fileidError: String;
   roomidforfileError: String;
   boxfileidforfileError: String;
+  words: any;
 }
 
 export default class RecordDashboard extends React.Component<
@@ -128,6 +130,7 @@ export default class RecordDashboard extends React.Component<
       fileidError: "",
       roomidforfileError: "",
       boxfileidforfileError: "",
+      words: English,
     };
   }
   public componentDidMount() {
@@ -805,6 +808,17 @@ export default class RecordDashboard extends React.Component<
       disableaddlocation: false,
     });
   }
+  setLangEnglish = () => {
+    this.setState({
+      words: English,
+    });
+  };
+
+  setLangAmharic = () => {
+    this.setState({
+      words: AMHARIC,
+    });
+  };
   //onSubmit = (data) => console.log("submiteddata" + data);
   // handlebuildingsubmit =event=>{
   //   event.preventDefault();
@@ -826,6 +840,14 @@ export default class RecordDashboard extends React.Component<
 
     return (
       <>
+        <div className="container">
+          <button className="btn btn-primary" onClick={this.setLangEnglish}>
+            EN
+          </button>
+          <button className="btn btn-warning" onClick={this.setLangAmharic}>
+            AM
+          </button>
+        </div>
         <div>
           {/* <div className="dropdown">
   <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -846,7 +868,7 @@ export default class RecordDashboard extends React.Component<
           // onSubmit={handleSubmit(this.onSubmit)}
           >
             <div className="form-group">
-              <label>Select Location</label>
+              <label>{this.state.words.selectlocation}</label>
               <select
                 className="form-control"
                 aria-label="Default select example"
@@ -885,7 +907,7 @@ export default class RecordDashboard extends React.Component<
             <div className="form-group ">
               <div className="form-group row">
                 <label className="col-sm-2 col-form-label">
-                  Buildging Name
+                  {this.state.words.BuildgingName}
                 </label>
                 <div className="col-sm-10">
                   <input
@@ -893,17 +915,20 @@ export default class RecordDashboard extends React.Component<
                     className="form-control"
                     id="inputEmail3"
                     placeholder="Buildging Name"
-                    //   {...(register("BuildgingName"), { required: true })}
                     onChange={(e) => this.onChangebuildingname(e)}
                   />
-                  <div color="red">{this.state.buildingnameError}</div>
+                  <div style={{ color: "red" }}>
+                    {this.state.buildingnameError}
+                  </div>
                   {/* {errors?.BuildgingName && <p>Buildging Name is required.</p>} */}
                 </div>
               </div>
             </div>
             <div className="form-group ">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Buildging Id</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.BuildgingId}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -913,7 +938,9 @@ export default class RecordDashboard extends React.Component<
                     // {...register("BuildgingId", { required: true })}
                     onChange={(e) => this.onChangebuildingID(e)}
                   />
-                  <div color="red">{this.state.buildingidError}</div>
+                  <div style={{ color: "red" }}>
+                    {this.state.buildingidError}
+                  </div>
 
                   {/* {errors?.BuildgingId && <p>Buildging Id is required.</p>} */}
                 </div>
@@ -922,14 +949,17 @@ export default class RecordDashboard extends React.Component<
             <div className="btn-group">
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary  "
+                style={{ marginLeft: "0.8rem" }}
                 onClick={this.handlechangebuilding}
               >
-                Add Building
+                {this.state.words.AddBuilding}
               </button>
+
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-primary "
+                style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({
                     buldingdivcontainer: !this.state.buldingdivcontainer,
@@ -942,7 +972,7 @@ export default class RecordDashboard extends React.Component<
                   this.setState({ buildingnameError: "" });
                 }}
               >
-                Cancel
+                {this.state.words.Cancel}
               </button>
             </div>
           </form>
@@ -951,7 +981,7 @@ export default class RecordDashboard extends React.Component<
           <form>
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select building</label>
+                <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -978,7 +1008,9 @@ export default class RecordDashboard extends React.Component<
 
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Room Name</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.RoomName}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -987,13 +1019,15 @@ export default class RecordDashboard extends React.Component<
                     placeholder="Room Name"
                     onChange={(e) => this.onChangeroomname(e)}
                   />
-                  <div>{this.state.roomnameError}</div>
+                  <div style={{ color: "red" }}>{this.state.roomnameError}</div>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Room Id</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.RoomId}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1002,7 +1036,7 @@ export default class RecordDashboard extends React.Component<
                     placeholder="Room Id"
                     onChange={(e) => this.onChangeroomid(e)}
                   />
-                  <div>{this.state.roomidError}</div>
+                  <div style={{ color: "red" }}>{this.state.roomidError}</div>
                 </div>
               </div>
             </div>
@@ -1010,13 +1044,15 @@ export default class RecordDashboard extends React.Component<
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={this.handlechangeroom}
               >
-                Add Room
+                {this.state.words.AddRoom}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({ roomcontainer: !this.state.roomcontainer });
                   this.setState({
@@ -1027,7 +1063,7 @@ export default class RecordDashboard extends React.Component<
                   this.setState({ roomnameError: "" });
                 }}
               >
-                Cancel
+                {this.state.words.Cancel}
               </button>
             </div>
           </form>
@@ -1036,7 +1072,7 @@ export default class RecordDashboard extends React.Component<
           <form>
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select building</label>
+                <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1067,7 +1103,7 @@ export default class RecordDashboard extends React.Component<
 
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select room</label>
+                <label>{this.state.words.Selectroom}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1091,13 +1127,17 @@ export default class RecordDashboard extends React.Component<
                     );
                   })}
                 </select>
-                <div>{this.state.roomidforshelfError}</div>
+                <div style={{ color: "red" }}>
+                  {this.state.roomidforshelfError}
+                </div>
               </div>
             )}
 
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Shelf Name</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.ShelfName}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1106,13 +1146,17 @@ export default class RecordDashboard extends React.Component<
                     placeholder="Shelf Name"
                     onChange={(e) => this.onChangeshelfname(e)}
                   />
-                  <div>{this.state.shelfnameError}</div>
+                  <div style={{ color: "red" }}>
+                    {this.state.shelfnameError}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Shelf Id</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.ShelfId}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1121,7 +1165,7 @@ export default class RecordDashboard extends React.Component<
                     placeholder="Shelf Id"
                     onChange={(e) => this.onChangeshelfid(e)}
                   />
-                  <div>{this.state.shelfidError}</div>
+                  <div style={{ color: "red" }}>{this.state.shelfidError}</div>
                 </div>
               </div>
             </div>
@@ -1129,13 +1173,15 @@ export default class RecordDashboard extends React.Component<
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={this.handlechangeshelf}
               >
-                Add shelf
+                {this.state.words.Addshelf}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({ shelfcontainer: !this.state.shelfcontainer });
                   this.setState({
@@ -1147,7 +1193,7 @@ export default class RecordDashboard extends React.Component<
                   this.roomidforshelf = "";
                 }}
               >
-                Cancel
+                {this.state.words.Cancel}
               </button>
             </div>
           </form>
@@ -1156,7 +1202,7 @@ export default class RecordDashboard extends React.Component<
           <form>
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select building</label>
+                <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1184,7 +1230,7 @@ export default class RecordDashboard extends React.Component<
 
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select room</label>
+                <label>{this.state.words.Selectroom}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1205,13 +1251,15 @@ export default class RecordDashboard extends React.Component<
                     );
                   })}
                 </select>
-                <div>{this.state.roomidforboxfileError}</div>
+                <div style={{ color: "red" }}>
+                  {this.state.roomidforboxfileError}
+                </div>
               </div>
             )}
 
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select shelf</label>
+                <label>{this.state.words.Selectshelf}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1235,7 +1283,9 @@ export default class RecordDashboard extends React.Component<
 
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">BoxFile Name</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.BoxFileName}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1244,13 +1294,17 @@ export default class RecordDashboard extends React.Component<
                     placeholder="BoxFile Name"
                     onChange={(e) => this.onChangeboxfilename(e)}
                   />
-                  <div>{this.state.boxfilenameError}</div>
+                  <div style={{ color: "red" }}>
+                    {this.state.boxfilenameError}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">BoxFile Id</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.BoxFileId}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1259,7 +1313,9 @@ export default class RecordDashboard extends React.Component<
                     placeholder="BoxFile Id"
                     onChange={(e) => this.onChangeboxfileid(e)}
                   />
-                  <div>{this.state.boxfileidError}</div>
+                  <div style={{ color: "red" }}>
+                    {this.state.boxfileidError}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1267,13 +1323,15 @@ export default class RecordDashboard extends React.Component<
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={this.handlechangeboxfile}
               >
-                Add BoxFile
+                {this.state.words.AddBoxFile}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({
                     boxfilecontainer: !this.state.boxfilecontainer,
@@ -1286,7 +1344,7 @@ export default class RecordDashboard extends React.Component<
                   this.setState({ selectedshelfid: "" });
                 }}
               >
-                Cancel
+                {this.state.words.Cancel}
               </button>
             </div>
           </form>
@@ -1295,7 +1353,7 @@ export default class RecordDashboard extends React.Component<
           <form>
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select building</label>
+                <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1321,7 +1379,7 @@ export default class RecordDashboard extends React.Component<
             )}
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select room</label>
+                <label>{this.state.words.Selectroom}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1341,12 +1399,14 @@ export default class RecordDashboard extends React.Component<
                     );
                   })}
                 </select>
-                <div>{this.state.roomidforfileError}</div>
+                <div style={{ color: "red" }}>
+                  {this.state.roomidforfileError}
+                </div>
               </div>
             )}
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select shelf</label>
+                <label>{this.state.words.Selectshelf}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1370,7 +1430,7 @@ export default class RecordDashboard extends React.Component<
             )}
             {this.state.stratfrombuilding || (
               <div className="form-group">
-                <label>Select Boxfile</label>
+                <label>{this.state.words.SelectBoxfile}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
@@ -1391,13 +1451,17 @@ export default class RecordDashboard extends React.Component<
                     );
                   })}
                 </select>
-                <div>{this.state.boxfileidforfileError}</div>
+                <div style={{ color: "red" }}>
+                  {this.state.boxfileidforfileError}
+                </div>
               </div>
             )}
 
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">File Name</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.FileName}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1406,13 +1470,15 @@ export default class RecordDashboard extends React.Component<
                     placeholder="File Name"
                     onChange={(e) => this.onChangefilename(e)}
                   />
-                  <div>{this.state.filenameError}</div>
+                  <div style={{ color: "red" }}>{this.state.filenameError}</div>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="form-group row">
-                <label className="col-sm-2 col-form-label">File Id</label>
+                <label className="col-sm-2 col-form-label">
+                  {this.state.words.FileId}
+                </label>
                 <div className="col-sm-10">
                   <input
                     type="text"
@@ -1421,7 +1487,7 @@ export default class RecordDashboard extends React.Component<
                     placeholder="File Id"
                     onChange={(e) => this.onChangefileid(e)}
                   />
-                  <div>{this.state.fileidError}</div>
+                  <div style={{ color: "red" }}>{this.state.fileidError}</div>
                 </div>
               </div>
             </div>
@@ -1429,13 +1495,15 @@ export default class RecordDashboard extends React.Component<
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={this.handlechangefile}
               >
-                Add File
+                {this.state.words.AddFile}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
+                style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({ filecontainer: !this.state.filecontainer });
                   this.setState({
@@ -1447,7 +1515,7 @@ export default class RecordDashboard extends React.Component<
                   this.boxfileforfile = "";
                 }}
               >
-                Cancel
+                {this.state.words.Cancel}
               </button>
             </div>
           </form>
