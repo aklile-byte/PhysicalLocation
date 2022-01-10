@@ -67,7 +67,7 @@ export class SPOperations {
   //       );
   //   });
   // }
-  public GetBuilding(context: WebPartContext): Promise<any[]> {
+  public GetBuilding(context: WebPartContext): Promise<any> {
     console.log("roomid");
     //
     // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
@@ -86,7 +86,6 @@ export class SPOperations {
         return response?.json();
       })
       .then((json: any) => {
-        console.log(json);
         return json?.value;
       }) as Promise<any>;
   }

@@ -19,7 +19,9 @@ export const English = {
   SelectBoxfile: "Select Boxfile",
   FileName: "File Name",
   FileId: "File Id",
-  AddFile: "",
+  AddFile: "AddFile",
+  BuldingId: "BuldingId",
+  BuildingName: "BuildingName",
 };
 export const AMHARIC = {
   selectlocation: "ቦታ ምረጥ",
@@ -43,4 +45,6 @@ export const AMHARIC = {
   FileName: "የፋይል ስም",
   FileId: "የፋይል ቁጥር",
   AddFile: "ፋይል ጨምር",
+  BuldingId: "ህንጻ ቁጥር",
+  BuildingName: " ህንጻ ስም",
 };
