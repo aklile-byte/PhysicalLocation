@@ -46,11 +46,11 @@ const Table = ({
   const { pageIndex, globalFilter } = state;
   return (
     <>
-      <GlobalFilter
+      {/* <GlobalFilter
         searchText={words.search}
         filter={globalFilter}
         setFilter={setGlobalFilter}
-      />
+      /> */}
       <table
         {...getTableProps()}
         className="table table-bordered table-overflow"

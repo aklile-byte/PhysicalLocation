@@ -12,6 +12,7 @@ import Addlocation from "./addlocation";
 import { buildingColumns } from "./buildingcolumns";
 import Building from "./buildingtable";
 import { SPOperations } from "../Services/SPServices";
+import ViewLocations from "./viewLocations";
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -102,7 +103,7 @@ export default class RecordDashboard extends React.Component<
             }
           </TabPanel>
           <TabPanel>
-            {this.state.buildingRecords && (
+            {/* {this.state.buildingRecords && (
               <Building
                 context={this.props.context}
                 words={this.state.words}
@@ -112,7 +113,12 @@ export default class RecordDashboard extends React.Component<
                 //updateRecordInfo={this.updateIncomingRecordInfo}
                 columns={buildingColumns}
               />
-            )}
+            )} */}
+            <ViewLocations
+              spops={this._spOps}
+              context={this.props.context}
+              words={this.state.words}
+            />
           </TabPanel>
         </Tabs>
         <ToastContainer />

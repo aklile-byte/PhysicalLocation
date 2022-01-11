@@ -89,6 +89,25 @@ export class SPOperations {
         return json?.value;
       }) as Promise<any>;
   }
+  public GetSpecificBuilding(
+    context: WebPartContext,
+    buildingId: String
+  ): Promise<any[]> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items?$filter=BuldingId eq '" +
+      buildingId +
+      "'";
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
 
   public Createbuilding(
     context: WebPartContext,
@@ -156,6 +175,20 @@ export class SPOperations {
         });
     });
   }
+  public GetAllRooms(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$select=*,Building/BuildingName&$expand=Building";
+
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        return json?.value;
+      }) as Promise<any>;
+  }
   public Getrooms(context: WebPartContext, roomid: String): Promise<any[]> {
     console.log("roomid" + roomid);
     //
@@ -213,6 +246,21 @@ export class SPOperations {
           );
         });
     });
+  }
+  public GetAllShelfs(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$select=*,Room/RoomName&$expand=Room";
+
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
   }
 
   public Getshelfs(context: WebPartContext, roomid: String): Promise<any[]> {
@@ -272,6 +320,21 @@ export class SPOperations {
         });
     });
   }
+  public GetAllBoxFiles(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('BoxFile')/items?$select=*,Shelf/ShelfName&$expand=Shelf";
+
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
   public Getboxfiles(context: WebPartContext, roomid: String): Promise<any[]> {
     console.log("roomid" + roomid);
 
@@ -293,6 +356,21 @@ export class SPOperations {
       .then((json: any) => {
         console.log(json);
         return json.value;
+      }) as Promise<any>;
+  }
+  public GetAllFiles(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('File')/items?$select=*,BoxFile/BoxFileName&$expand=BoxFile";
+
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
       }) as Promise<any>;
   }
   public Creatfile(
