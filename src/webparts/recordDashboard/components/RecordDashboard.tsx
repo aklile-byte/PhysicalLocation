@@ -7,11 +7,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { English, AMHARIC } from "./words";
 import "react-tabs/style/react-tabs.css";
-import addlocation from "./addlocation";
 import Addlocation from "./addlocation";
-import { buildingColumns } from "./buildingcolumns";
-import Building from "./buildingtable";
 import { SPOperations } from "../Services/SPServices";
+import ViewLocations from "./viewLocations";
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -40,6 +38,14 @@ export default class RecordDashboard extends React.Component<
       caller: null,
       tabIndex: 0,
     };
+
+    let cssURL =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
+    SPComponentLoader.loadCss(cssURL);
+    SPComponentLoader.loadCss(
+      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+    );
+
     this.setBuildingRecords();
   }
   setLangEnglish = () => {
@@ -57,9 +63,6 @@ export default class RecordDashboard extends React.Component<
   setBuildingRecords = () => {
     this._spOps.GetBuilding(this.props.context).then((result) => {
       console.log(result);
-      // this.setState({ buildingListTitle: result });
-      // });
-      // GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       result.map((item) => {
         data.push({
@@ -76,16 +79,9 @@ export default class RecordDashboard extends React.Component<
   };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
-    let cssURL =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
-    SPComponentLoader.loadCss(cssURL);
-    SPComponentLoader.loadCss(
-      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-    );
 
     return (
       <>
-        {/* for rendering incoming and outgoing tabs */}
         <Tabs defaultIndex={1}>
           <TabList>
             <Tab>Add Location</Tab>
@@ -102,17 +98,7 @@ export default class RecordDashboard extends React.Component<
             }
           </TabPanel>
           <TabPanel>
-            {this.state.buildingRecords && (
-              <Building
-                context={this.props.context}
-                words={this.state.words}
-                //showModal={this.showModal}
-                data={this.state.buildingRecords}
-                //setRecords={this.addChangeToIncommingRecords}
-                //updateRecordInfo={this.updateIncomingRecordInfo}
-                columns={buildingColumns}
-              />
-            )}
+            <ViewLocations spops={this._spOps} context={this.props.context} words={this.state.words} />
           </TabPanel>
         </Tabs>
         <ToastContainer />

@@ -1,10 +1,7 @@
 import * as React from "react";
-import styles from "./RecordDashboard.module.scss";
 import { IRecordDashboardProps } from "./IRecordDashboardProps";
 import { escape } from "@microsoft/sp-lodash-subset";
 import { SPComponentLoader } from "@microsoft/sp-loader";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import * as pnp from "sp-pnp-js";
 import "./main.css";
 import Modal from "./modal";
 import { ToastContainer, toast, Bounce } from "react-toastify";
@@ -12,21 +9,17 @@ import "react-toastify/dist/ReactToastify.css";
 // import { Tabs, Tab, Modal, Row, Button, Col, Form, Card, Container } from "react-bootstrap";
 import "jquery";
 require("bootstrap");
-
 import "react-tabs/style/react-tabs.css";
-import ModalEditRecord from "./modal-edit-record";
 import { SPOperations } from "../Services/SPServices";
 //import { useForm } from "react-hook-form";
 import { English, AMHARIC } from "./words";
-import Building from "./buildingtable";
-import { buildingColumns } from "./buildingcolumns";
 
 export interface TableItems {
   physicalLoctionListTiltle: any[];
-  buildingListTitle: any[];
-  roomlistTitle: any[];
-  shelflistTitle: any[];
-  boxfileTitle: any[];
+  buildings: any[];
+  rooms: any[];
+  shelfs: any[];
+  boxFiles: any[];
   selectedvalue: String;
   buldingdivcontainer: boolean;
   disableaddlocation: boolean;
@@ -34,7 +27,7 @@ export interface TableItems {
   shelfcontainer: boolean;
   boxfilecontainer: boolean;
   filecontainer: boolean;
-  stratfrombuilding: boolean;
+  startFromBuilding: boolean;
   buildingId: String;
   buildingname: String;
   createdDate: any;
@@ -79,7 +72,7 @@ export default class Addlocation extends React.Component<
   public _spOps: SPOperations;
   public data: object;
   public selctedlocation: String;
-  public buildingidforroom: String;
+  public buildingidforroom: any;
   public roomidforshelf: String;
   public shelfidforboxfile: String;
   public boxfileforfile: String;
@@ -90,10 +83,10 @@ export default class Addlocation extends React.Component<
     this._spOps = new SPOperations();
     this.state = {
       physicalLoctionListTiltle: [],
-      buildingListTitle: [],
-      roomlistTitle: [],
-      shelflistTitle: [],
-      boxfileTitle: [],
+      buildings: [],
+      rooms: [],
+      shelfs: [],
+      boxFiles: [],
       selectedvalue: "",
       buldingdivcontainer: false,
       disableaddlocation: false,
@@ -101,7 +94,7 @@ export default class Addlocation extends React.Component<
       shelfcontainer: false,
       boxfilecontainer: false,
       filecontainer: false,
-      stratfrombuilding: false,
+      startFromBuilding: false,
       buildingId: "",
       buildingname: "",
       createdDate: null,
@@ -136,24 +129,14 @@ export default class Addlocation extends React.Component<
       words: English,
       buildingRecords: null,
     };
-    //this.setBuildingRecords;
-    this._spOps.GetAllList(this.props.context).then((result: any[]) => {
-      this.setState({ physicalLoctionListTiltle: result });
-    });
+    let cssURL =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+    SPComponentLoader.loadCss(cssURL);
+    SPComponentLoader.loadCss(
+      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+    );
+    this.setBuildingRecords();
   }
-  // public componentDidMount() {
-  //   this._spOps.GetAllList(this.props.context).then((result: any[]) => {
-  //     this.setState({ physicalLoctionListTiltle: result });
-  //   });
-  //   // this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
-  //   //   this.setState({ buildingListTitle: result });
-  //   // });
-  //   // this._spOps
-  //   //   .Getrooms(this.props.context, this.state.selectedroomid)
-  //   //   .then((result: any[]) => {
-  //   //     this.setState({ roomlistTitle: result });
-  //   //   });
-  // }
 
   public onChangebuildingname = (e) => {
     this.setState({
@@ -170,7 +153,7 @@ export default class Addlocation extends React.Component<
       createdDate: value,
     });
   };
-  public onChangecratedby = (event, value: string) => {
+  public onChangecreatedby = (event, value: string) => {
     this.setState({
       cratedby: value,
     });
@@ -225,20 +208,14 @@ export default class Addlocation extends React.Component<
       fileid: e.target.value,
     });
   };
-
   public handlechange = (e) => {
-    // this.setState({disablelocation:true});
-
     if (this.selctedlocation == "Building") {
       this.setState({ buldingdivcontainer: !this.state.buldingdivcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
-
-      // this.selectbuilding(e);
       this.setState({ roomcontainer: false });
       this.setState({ shelfcontainer: false });
       this.setState({ boxfilecontainer: false });
       this.setState({ filecontainer: false });
-      // this.setState({ selectedvalue: "" });
     } else if (this.selctedlocation == "Rooms") {
       this.setState({ roomcontainer: !this.state.roomcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
@@ -246,7 +223,6 @@ export default class Addlocation extends React.Component<
       this.setState({ shelfcontainer: false });
       this.setState({ boxfilecontainer: false });
       this.setState({ filecontainer: false });
-      // this.setState({ selectedvalue: "" });
     } else if (this.selctedlocation == "Shelf") {
       this.setState({ shelfcontainer: !this.state.shelfcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
@@ -254,7 +230,6 @@ export default class Addlocation extends React.Component<
       this.setState({ roomcontainer: false });
       this.setState({ boxfilecontainer: false });
       this.setState({ filecontainer: false });
-      //this.setState({ selectedvalue: "" });
     } else if (this.selctedlocation == "BoxFile") {
       this.setState({ boxfilecontainer: !this.state.boxfilecontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
@@ -262,7 +237,6 @@ export default class Addlocation extends React.Component<
       this.setState({ roomcontainer: false });
       this.setState({ shelfcontainer: false });
       this.setState({ filecontainer: false });
-      // this.setState({ selectedvalue: "" });
     } else if (this.selctedlocation == "File") {
       this.setState({ filecontainer: !this.state.filecontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
@@ -270,124 +244,47 @@ export default class Addlocation extends React.Component<
       this.setState({ roomcontainer: false });
       this.setState({ shelfcontainer: false });
       this.setState({ boxfilecontainer: false });
-      // this.setState({ selectedvalue: "" });
     }
   };
-  public handlechangebuilding = (e) => {
-    // this.setState({disablelocation:true});
+  public handleBuildingSubmit = (e) => {
     const isValid: any = this.validate();
-
-    //if(this.state.selectedvalue=="Bulding"){
     if (isValid) {
       this.setState({ buldingdivcontainer: !this.state.buldingdivcontainer });
-      // this.setState({ stratfrombuilding: !this.state.stratfrombuilding });
-      // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-
-      // this.setState({ roomcontainer: !this.state.roomcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
-      // this.setState({ selectedvalue: "Building" });
       this.submitbuilding(e);
-      // this.selectbuilding(e);
     }
-
-    // }
   };
   public handlechangeroom = (e) => {
-    // this.setState({disablelocation:true});
-
-    //if(this.state.selectedvalue=="Bulding"){
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-    //this.setState({roomcontainer:!this.state.roomcontainer});
-
-    // if (this.state.stratfrombuilding == true) {
-    //   this.setState({ shelfcontainer: !this.state.shelfcontainer });
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-    //  this.setState({stratfrombuilding:!this.state.stratfrombuilding})
-    // } else {
     const isValid: any = this.validateroom();
-
-    //if(this.state.selectedvalue=="Bulding"){
     if (isValid) {
       this.setState({ roomcontainer: !this.state.roomcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
-      // this.setState({ selectedvalue: "Rooms" });
       this.submitroom(e);
     }
-
-    // }
   };
   public handlechangeshelf = (e) => {
-    // this.setState({disablelocation:true});
-
-    //if(this.state.selectedvalue=="Bulding"){
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-
-    // if (this.state.stratfrombuilding == true) {
-    //   this.setState({ boxfilecontainer: !this.state.boxfilecontainer });
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-    // this.setState({roomcontainer:!this.state.roomcontainer});
-
-    // this.setState({stratfrombuilding:!this.state.stratfrombuilding})
-    // } else {
     const isValid: any = this.validateshelf();
     if (isValid) {
       this.setState({ shelfcontainer: !this.state.shelfcontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
       this.submitshelf(e);
     }
-
-    // }
   };
   public handlechangeboxfile = (e) => {
-    // this.setState({disablelocation:true});
-
-    //if(this.state.selectedvalue=="Bulding"){
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-
-    // if (this.state.stratfrombuilding == true) {
-    //   this.setState({ filecontainer: !this.state.filecontainer });
-    // } else {
-
     const isValid: any = this.validatboxfile();
     if (isValid) {
       this.setState({ boxfilecontainer: !this.state.boxfilecontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
       this.submitboxfile(e);
     }
-
-    // }
   };
   public handlechangefile = (e) => {
-    // this.setState({disablelocation:true});
-
-    //if(this.state.selectedvalue=="Bulding"){
-
-    // this.setState({buldingdivcontainer:!this.state.buldingdivcontainer});
-
-    // if (this.state.stratfrombuilding == true) {
-    //   this.setState({ buldingdivcontainer: !this.state.buldingdivcontainer });
-    //   this.setState({ roomcontainer: !this.state.roomcontainer });
-    //   this.setState({ shelfcontainer: !this.state.shelfcontainer });
-    //   this.setState({ boxfilecontainer: !this.state.boxfilecontainer });
-
-    //   this.setState({ stratfrombuilding: !this.state.stratfrombuilding });
-    //   this.setState({ filecontainer: !this.state.filecontainer });
-    //   this.setState({ disableaddlocation: !this.state.disableaddlocation });
-    //   this.submitbuilding(e);
-    // } else {
     const isValid: any = this.validatfile();
     if (isValid) {
       this.setState({ filecontainer: !this.state.filecontainer });
       this.setState({ disableaddlocation: !this.state.disableaddlocation });
       this.submitfile(e);
     }
-
-    // }
   };
   public validate = () => {
     let buildingnameError = "";
@@ -399,7 +296,6 @@ export default class Addlocation extends React.Component<
     if (!this.state.buildingId) {
       buildingidError = "Building ID is Required";
     }
-
     if (buildingnameError || buildingidError) {
       this.setState({ buildingnameError, buildingidError });
       return false;
@@ -502,13 +398,6 @@ export default class Addlocation extends React.Component<
     if (!this.boxfileforfile) {
       boxfileidforfileError = " BoxFile is  is Required";
     }
-    // let selectstring = "Open this select menu";
-    // if (this.state.selectedroomid.trim() === selectstring.trim()) {
-    //   // roomidforshelfError = " Room is  is Required";
-    //   console.log(
-    //     "this.state.selectedroomid.trim()" + this.state.selectedroomid.trim()
-    //   );
-    // }
 
     if (
       filenameError ||
@@ -533,312 +422,185 @@ export default class Addlocation extends React.Component<
 
     const isValid: any = this.validate();
 
-    const datanew: object = {
+    const buildingInfo: object = {
       Title: this.state.buildingname,
       BuldingId: this.state.buildingId,
       BuildingName: this.state.buildingname,
-      createddate: this.state.createdDate,
-      createdby: this.state.cratedby,
-      updateddate: this.state.updateDate,
-      updatedby: this.state.updatedby,
-    };
-    this.data = datanew;
+    }
     if (isValid) {
       this._spOps
-        .Createbuilding(this.props.context, this.data)
+        .Createbuilding(this.props.context, buildingInfo)
         .then((result: string) => {
-          //   this.setState({status:result});
-          this.data = {};
+          this.setState({ buildingId: "" });
+          this.setState({ buildingname: "" });
+          this.setState({ buildingidError: "" });
+          this.setState({ buildingnameError: "" });
         });
-      console.log(this.state.boxfilename, this.state.buildingId);
-      this.setState({ buildingId: "" });
-      this.setState({ buildingname: "" });
-      this.setState({ buildingidError: "" });
-      this.setState({ buildingnameError: "" });
     }
-
-    //             }
   }
   public submitroom(e) {
     e.preventDefault();
-
     const isValid: any = this.validateroom();
-    console.log("selected" + this.state.selectedvalue);
-    const datanew: object = {
+    const roomInfo: object = {
       Title: this.state.roomname,
-      // BuldingId: this.state.selectedvalue,
-      BuldingId: this.buildingidforroom,
+      BuildingId: this.buildingidforroom,
       RoomId: this.state.roomid,
       RoomName: this.state.roomname,
     };
-    this.data = datanew;
-
     if (isValid) {
       this._spOps
-        .Createroom(this.props.context, this.data)
+        .Createroom(this.props.context, roomInfo)
         .then((result: string) => {
-          this.data = {};
-          //   this.setState({status:result});
+          this.setState({ roomid: "" });
+          this.setState({ roomname: "" });
+          this.setState({ roomidError: "" });
+          this.setState({ roomnameError: "" });
         });
-      console.log(this.state.boxfilename, this.state.buildingId);
-      this.setState({ roomid: "" });
-      this.setState({ roomname: "" });
-      this.setState({ roomidError: "" });
-      this.setState({ roomnameError: "" });
     }
-
-    //             }
   }
   public submitshelf(e) {
     e.preventDefault();
-
     const isValid: any = this.validateshelf();
-    console.log("selected" + this.state.selectedvalue);
-    const datanew: object = {
+    const shelfInfo: object = {
       Title: this.state.shelfname,
       RoomId: this.roomidforshelf,
       ShelfId: this.state.shelfid,
       ShelfName: this.state.shelfname,
     };
-    this.data = datanew;
     if (isValid) {
-      console.log("selected room" + this.state.selectedroomid);
       this._spOps
-        .Creatshelf(this.props.context, this.data)
+        .Createshelf(this.props.context, shelfInfo)
         .then((result: string) => {
-          this.data = {};
-          //   this.setState({status:result});
+          this.setState({ shelfid: "" });
+          this.setState({ shelfname: "" });
+          this.setState({ shelfidError: "" });
+          this.setState({ shelfnameError: "" });
+          this.roomidforshelf = "";
         });
-      this.setState({ shelfid: "" });
-      this.setState({ shelfname: "" });
-      this.setState({ shelfidError: "" });
-      this.setState({ shelfnameError: "" });
-      this.roomidforshelf = "";
-    }
 
-    //             }
+    }
   }
   public submitboxfile(e) {
     e.preventDefault();
 
     const isValid: any = this.validatboxfile();
-    console.log("selected" + this.state.selectedvalue);
-    const datanew: object = {
+    const boxFileInfo: object = {
       Title: this.state.boxfilename,
       ShelfId: this.shelfidforboxfile,
       BoxFileId: this.state.boxfileid,
       BoxFileName: this.state.boxfilename,
     };
-    this.data = datanew;
     if (isValid) {
       this._spOps
-        .Creatboxfile(this.props.context, this.data)
+        .Creatboxfile(this.props.context, boxFileInfo)
         .then((result: string) => {
-          this.data = {};
-          //   this.setState({status:result});
+          this.setState({ boxfileid: "" });
+          this.setState({ boxfilename: "" });
+          this.setState({ boxfileidError: "" });
+          this.setState({ boxfilenameError: "" });
+          this.setState({ selectedshelfid: "" });
         });
-      console.log(this.state.boxfilename, this.state.buildingId);
-      this.setState({ boxfileid: "" });
-      this.setState({ boxfilename: "" });
-      this.setState({ boxfileidError: "" });
-      this.setState({ boxfilenameError: "" });
-      this.setState({ selectedshelfid: "" });
     }
-    //             }
   }
   public submitfile(e) {
     e.preventDefault();
 
     const isValid: any = this.validatfile();
-    console.log("selected" + this.state.selectedvalue);
-    const datanew: object = {
+    const fileInfo: object = {
       Title: this.state.filename,
       BoxFileId: this.boxfileforfile,
       FileId: this.state.fileid,
       FileName: this.state.filename,
     };
-    this.data = datanew;
     if (isValid) {
       this._spOps
-        .Creatfile(this.props.context, this.data)
+        .Createfile(this.props.context, fileInfo)
         .then((result: string) => {
-          this.data = {};
-          //   this.setState({status:result});
+          this.setState({ fileid: "" });
+          this.setState({ filename: "" });
+          this.setState({ fileidError: "" });
+          this.setState({ filenameError: "" });
+          this.setState({ selectedshelfid: "" });
+          this.boxfileforfile = "";
         });
-      this.setState({ fileid: "" });
-      this.setState({ filename: "" });
-      this.setState({ fileidError: "" });
-      this.setState({ filenameError: "" });
-      this.setState({ selectedshelfid: "" });
-      this.boxfileforfile = "";
     }
-
-    // }            }
   }
   public selectbuilding(e) {
-    console.log("reached here", e.target.value);
-    // this.setState({ selectedvalue: e.target.value });
-
     this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
-      this.setState({ buildingListTitle: result });
+      this.setState({ buildings: result });
     });
   }
-
   public selectroomforshelf(e) {
-    console.log("reached here", e.target.value);
-    // this.roomidforshelf = e.target.value;
-    this.setState({ selectedroomid: e.target.value });
-    //  console.log("insideshelfselected");
+    console.log(e.target.value)
     this._spOps.Getrooms(this.props.context, e.target.value).then((result) => {
-      console.log(result);
-      this.setState({ roomlistTitle: result });
+      this.setState({ rooms: result });
     });
   }
   public selectshelfforboxfile(e) {
     let selectstring = "Open this select menu";
     let select = " Open this select menu";
     if (selectstring.trim() === e.target.value.trim()) {
-      console.log("select menu called");
-      console.log("trimmed" + e.target.value.trim());
       this.setState({ selectedshelfid: "" });
-      // this.setState({ selectedroomid: "" });
     } else {
-      console.log("reached here", e.target.value);
-      //this.shelfidforboxfile = e.target.value;
-      this.setState({ selectedshelfid: e.target.value });
-      //  console.log("insideshelfselected");
       this._spOps
         .Getshelfs(this.props.context, e.target.value)
         .then((result) => {
-          console.log(result);
-          this.setState({ shelflistTitle: result });
+          this.setState({ shelfs: result });
         });
     }
   }
   public selectboxfileforfile(e) {
-    console.log("reached here", e.target.value);
-    // this.boxfileforfile = e.target.value;
-    this.setState({ selectedbosfileid: e.target.value });
-    //  console.log("insideshelfselected");
     this._spOps
       .Getboxfiles(this.props.context, e.target.value)
       .then((result) => {
-        console.log(result);
-        this.setState({ boxfileTitle: result });
+        this.setState({ boxFiles: result });
       });
   }
-
-  newstate = "";
-
   physicallocation = {
     location: ["Building", "Rooms", "Shelf", "BoxFile", "File"],
   };
-  building = {
-    buildings: ["Bulding1", "Bulding2", "Bulding3", "Bulding4"],
-  };
-  room = {
-    rooms: ["Room1", "Room2", "Room3", "Room4"],
-  };
-  shelf = {
-    shelfs: ["Shelf1", "Shelf2", "Shelf3", "Shelf4"],
-  };
-  boxfile = {
-    boxfiles: ["BoxFile1", "BoxFile2", "BoxFile3", "BoxFile4"],
-  };
+
   selected(e) {
-    // this.newstate=e.target.value.tostring();
-    console.log();
     this.selctedlocation = e.target.value;
 
     this.setState({ selectedvalue: e.target.value });
-    let select = " Open this select menu";
-    let selectstring = "Building";
-    // if (selectstring.trim() === e.target.value.trim()) {
-    //   this.selectbuilding(e);
-    // }
     this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
-      this.setState({ buildingListTitle: result });
+      console.log(result)
+      this.setState({ buildings: result });
     });
-
     this.handlechange(e);
-
-    //
   }
   selectedbuilding(e) {
-    // this.newstate=e.target.value.tostring();
-
-    //  this.setState({ selectedvalue: e.target.value });
     this.buildingidforroom = e.target.value;
-
-    //
   }
   selectedroom(e) {
-    // this.newstate=e.target.value.tostring();
-    // this.roomidforshelf = e.target.value;
-
     let selectstring = "Open this select menu";
     let select = " Open this select menu";
     if (selectstring.trim() === e.target.value.trim()) {
-      console.log("select menu called");
-      console.log("trimmed" + e.target.value.trim());
       this.roomidforshelf = "";
-      // this.setState({ selectedroomid: "" });
     } else {
-      console.log(e.target.value);
-      // this.setState({ selectedroomid: e.target.value });
-      console.log("calledseletedroom");
       this.roomidforshelf = e.target.value;
     }
-
-    //
   }
   selecteshelf(e) {
-    // this.newstate=e.target.value.tostring();
     this.shelfidforboxfile = e.target.value;
-    //
   }
   selectboxfile(e) {
     let selectstring = "Open this select menu";
     let select = " Open this select menu";
     if (selectstring.trim() === e.target.value.trim()) {
-      console.log("select menu called");
-      console.log("trimmed" + e.target.value.trim());
       this.boxfileforfile = "";
-      // this.setState({ selectedroomid: "" });
     } else {
-      // this.newstate=e.target.value.tostring();
       this.boxfileforfile = e.target.value;
     }
-    //
   }
   disableaddlocation() {
     this.setState({
       disableaddlocation: false,
     });
   }
-  setLangEnglish = () => {
-    this.setState({
-      words: English,
-    });
-  };
-
-  setLangAmharic = () => {
-    this.setState({
-      words: AMHARIC,
-    });
-  };
-  //onSubmit = (data) => console.log("submiteddata" + data);
-  // handlebuildingsubmit =event=>{
-  //   event.preventDefault();
-  //   console.log(this.state.boxfilename,this.state.buildingId);
-
-  // }
-
   setBuildingRecords = () => {
     this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
-      // this.setState({ buildingListTitle: result });
-      // });
-      // GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       result.map((item) => {
         data.push({
@@ -855,46 +617,10 @@ export default class Addlocation extends React.Component<
   };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
-    console.log(this.state.physicalLoctionListTiltle);
-    console.log(this.state.buildingListTitle);
-
-    let cssURL =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
-    SPComponentLoader.loadCss(cssURL);
-    SPComponentLoader.loadCss(
-      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-    );
-    //const { register, handleSubmit, errors } = useForm();
-
     return (
       <>
-        <div className="container">
-          <button className="btn btn-primary" onClick={this.setLangEnglish}>
-            EN
-          </button>
-          <button className="btn btn-warning" onClick={this.setLangAmharic}>
-            AM
-          </button>
-        </div>
         <div>
-          {/* <div className="dropdown">
-  <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Add Location
-    <span className="caret"></span>
-  </button>
-  <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-    {this.mycontry.myarry.map(data=>(
-     
-      <li><a href="#">{data}</a></li>
-
-    ))}
-    
-   
-  </ul>
-</div> */}
-          <form
-          // onSubmit={handleSubmit(this.onSubmit)}
-          >
+          <form>
             <div className="form-group">
               <label>{this.state.words.selectlocation}</label>
               <select
@@ -907,23 +633,8 @@ export default class Addlocation extends React.Component<
                 {this.physicallocation.location.map((data) => (
                   <option value={data}>{data}</option>
                 ))}
-                {/* {this.state.physicalLoctionListTiltle.map((data) => {
-                  return (
-                    <>
-                      <option value={data.key}>{data.value}</option>
-                    </>
-                  );
-                })} */}
               </select>
             </div>
-            {/* <button
-              type="button"
-              className="btn btn-primary"
-              onClick={this.handlechange}
-              disabled={this.state.disableaddlocation}
-            >
-              Add Location
-            </button> */}
           </form>
         </div>
         {this.state.buldingdivcontainer && (
@@ -944,7 +655,6 @@ export default class Addlocation extends React.Component<
                   <div style={{ color: "red" }}>
                     {this.state.buildingnameError}
                   </div>
-                  {/* {errors?.BuildgingName && <p>Buildging Name is required.</p>} */}
                 </div>
               </div>
             </div>
@@ -959,14 +669,11 @@ export default class Addlocation extends React.Component<
                     className="form-control"
                     id="inputPassword3"
                     placeholder="Buildging Id"
-                    // {...register("BuildgingId", { required: true })}
                     onChange={(e) => this.onChangebuildingID(e)}
                   />
                   <div style={{ color: "red" }}>
                     {this.state.buildingidError}
                   </div>
-
-                  {/* {errors?.BuildgingId && <p>Buildging Id is required.</p>} */}
                 </div>
               </div>
             </div>
@@ -975,14 +682,14 @@ export default class Addlocation extends React.Component<
                 type="button"
                 className="btn btn-primary  "
                 style={{ marginLeft: "0.8rem" }}
-                onClick={this.handlechangebuilding}
+                onClick={this.handleBuildingSubmit}
               >
                 {this.state.words.AddBuilding}
               </button>
 
               <button
                 type="button"
-                className="btn btn-primary "
+                className="btn btn-danger "
                 style={{ marginLeft: "0.8rem" }}
                 onClick={() => {
                   this.setState({
@@ -991,7 +698,6 @@ export default class Addlocation extends React.Component<
                   this.setState({
                     disableaddlocation: !this.state.disableaddlocation,
                   });
-                  // this.setState({ selectedvalue: "Building" });
                   this.setState({ buildingidError: "" });
                   this.setState({ buildingnameError: "" });
                 }}
@@ -1003,7 +709,7 @@ export default class Addlocation extends React.Component<
         )}
         {this.state.roomcontainer && (
           <form>
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
                 <select
@@ -1013,14 +719,11 @@ export default class Addlocation extends React.Component<
                   onChange={(e) => this.selectedbuilding(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.building.buildings.map(data=>( 
-      <option value={data}>{data}</option>
-
-    ))} */}
-                  {this.state.buildingListTitle.map((data) => {
+                  {this.state.buildings.map((data) => {
+                    console.log(data)
                     return (
                       <>
-                        <option value={data.BuldingId}>
+                        <option value={data.ID}>
                           {data.BuildingName}
                         </option>
                       </>
@@ -1082,7 +785,6 @@ export default class Addlocation extends React.Component<
                   this.setState({
                     disableaddlocation: !this.state.disableaddlocation,
                   });
-                  // this.setState({ selectedvalue: "Rooms" });
                   this.setState({ roomidError: "" });
                   this.setState({ roomnameError: "" });
                 }}
@@ -1094,7 +796,7 @@ export default class Addlocation extends React.Component<
         )}
         {this.state.shelfcontainer && (
           <form>
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
                 <select
@@ -1104,15 +806,7 @@ export default class Addlocation extends React.Component<
                   onChange={(e) => this.selectroomforshelf(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.building.buildings.map(data=>( 
-      <option value={data}>{data}</option>
-
-    ))} */}
-                  {/* {this.building.buildings.map(data=>( 
-      <option value={data}>{data}</option>
-
-    ))} */}
-                  {this.state.buildingListTitle.map((data) => {
+                  {this.state.buildings.map((data) => {
                     return (
                       <>
                         <option value={data.BuldingId}>
@@ -1125,7 +819,7 @@ export default class Addlocation extends React.Component<
               </div>
             )}
 
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectroom}</label>
                 <select
@@ -1135,15 +829,7 @@ export default class Addlocation extends React.Component<
                   onChange={(e) => this.selectedroom(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.room.rooms.map(data=>( 
-      <option value={data}>{data}</option>
-
-    ))} */}
-                  {/* {this.building.buildings.map(data=>( 
-      <option value={data}>{data}</option>
-
-    ))} */}
-                  {this.state.roomlistTitle.map((data) => {
+                  {this.state.rooms.map((data) => {
                     return (
                       <>
                         <option value={data.RoomId}>{data.RoomName}</option>
@@ -1224,22 +910,17 @@ export default class Addlocation extends React.Component<
         )}
         {this.state.boxfilecontainer && (
           <form>
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
                   id="dropdown"
-                  // onChange={(e) => this.selected(e)}
                   onChange={(e) => this.selectroomforshelf(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.building.buildings.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-
-                  {this.state.buildingListTitle.map((data) => {
+                  {this.state.buildings.map((data) => {
                     return (
                       <>
                         <option value={data.BuldingId}>
@@ -1252,22 +933,17 @@ export default class Addlocation extends React.Component<
               </div>
             )}
 
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectroom}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
                   id="dropdown"
-                  // onChange={(e) => this.selected(e)}
                   onChange={(e) => this.selectshelfforboxfile(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.room.rooms.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-
-                  {this.state.roomlistTitle.map((data) => {
+                  {this.state.rooms.map((data) => {
                     return (
                       <>
                         <option value={data.RoomId}>{data.RoomName}</option>
@@ -1281,7 +957,7 @@ export default class Addlocation extends React.Component<
               </div>
             )}
 
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectshelf}</label>
                 <select
@@ -1291,10 +967,7 @@ export default class Addlocation extends React.Component<
                   onChange={(e) => this.selecteshelf(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.shelf.shelfs.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-                  {this.state.shelflistTitle.map((data) => {
+                  {this.state.shelfs.map((data) => {
                     return (
                       <>
                         <option value={data.ShelfId}>{data.ShelfName}</option>
@@ -1375,21 +1048,17 @@ export default class Addlocation extends React.Component<
         )}
         {this.state.filecontainer && (
           <form>
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
                   id="dropdown"
-                  // onChange={(e) => this.selected(e)}
                   onChange={(e) => this.selectroomforshelf(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.building.buildings.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-                  {this.state.buildingListTitle.map((data) => {
+                  {this.state.buildings.map((data) => {
                     return (
                       <>
                         <option value={data.BuldingId}>
@@ -1401,21 +1070,17 @@ export default class Addlocation extends React.Component<
                 </select>
               </div>
             )}
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectroom}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
                   id="dropdown"
-                  // onChange={(e) => this.selected(e)}
                   onChange={(e) => this.selectshelfforboxfile(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.room.rooms.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-                  {this.state.roomlistTitle.map((data) => {
+                  {this.state.rooms.map((data) => {
                     return (
                       <>
                         <option value={data.RoomId}>{data.RoomName}</option>
@@ -1428,21 +1093,17 @@ export default class Addlocation extends React.Component<
                 </div>
               </div>
             )}
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectshelf}</label>
                 <select
                   className="form-control"
                   aria-label="Default select example"
                   id="dropdown"
-                  // onChange={(e) => this.selected(e)}
                   onChange={(e) => this.selectboxfileforfile(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.shelf.shelfs.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-                  {this.state.shelflistTitle.map((data) => {
+                  {this.state.shelfs.map((data) => {
                     return (
                       <>
                         <option value={data.ShelfId}>{data.ShelfName}</option>
@@ -1452,7 +1113,7 @@ export default class Addlocation extends React.Component<
                 </select>
               </div>
             )}
-            {this.state.stratfrombuilding || (
+            {this.state.startFromBuilding || (
               <div className="form-group">
                 <label>{this.state.words.SelectBoxfile}</label>
                 <select
@@ -1462,10 +1123,7 @@ export default class Addlocation extends React.Component<
                   onChange={(e) => this.selectboxfile(e)}
                 >
                   <option selected>Open this select menu</option>
-                  {/* {this.boxfile.boxfiles.map((data) => (
-                    <option value={data}>{data}</option>
-                  ))} */}
-                  {this.state.boxfileTitle.map((data) => {
+                  {this.state.boxFiles.map((data) => {
                     return (
                       <>
                         <option value={data.BoxFileId}>

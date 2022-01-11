@@ -4,11 +4,8 @@ import Table from "./table";
 const Building = ({
   words,
   context,
-  //showModal,
   columns,
   data,
-  //setRecords,
-  // updateRecordInfo,
 }) => {
   return (
     <div className="">
@@ -31,9 +28,7 @@ const Building = ({
             data={data}
             context={context}
             columns={columns}
-            //setRecords={setRecords}
             words={words}
-            //updateRecordInfo={updateRecordInfo}
           />
         </div>
       </div>

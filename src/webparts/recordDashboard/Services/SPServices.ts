@@ -4,81 +4,110 @@ import {
   SPHttpClientResponse,
   ISPHttpClientOptions,
 } from "@microsoft/sp-http";
-import { IDropdownOption } from "office-ui-fabric-react";
 
 export class SPOperations {
-  public GetAllList(context: WebPartContext): Promise<any[]> {
-    let locationUrl: string =
-      context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists?select=Title";
-    //let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
-    var locationTitle: any[] = [];
-    return new Promise<any[]>(async (resolve, reject) => {
-      context.spHttpClient
-        .get(locationUrl, SPHttpClient.configurations.v1)
-        .then(
-          (response: SPHttpClientResponse) => {
-            response.json().then((results: any) => {
-              results.value.map((result: any) => {
-                locationTitle.push({ key: result.Title, value: result.Title });
-              });
-            });
-            resolve(locationTitle);
-          },
-          (error: any): void => {
-            reject("error occured" + error);
-          }
-        );
-    });
-  }
-  // public GetBuilding(context: WebPartContext): Promise<any[]> {
-  //   // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
-  //   let locationUrl: string =
-  //     context.pageContext.web.absoluteUrl +
-  //     "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
-
-  //   //let resturl:string=context.
-  //   var locationTitle: any[] = [];
-
-  //   return new Promise<any[]>(async (resolve, reject) => {
-  //     context.spHttpClient
-  //       .get(locationUrl, SPHttpClient.configurations.v1)
-  //       .then(
-  //         (response: SPHttpClientResponse) => {
-  //           response.json().then((results: any) => {
-  //             console.log(results);
-  //             results.value.map((result: any) => {
-  //               console.log("insinegetbuilding");
-  //               console.log(result.Title);
-  //               console.log(result.BuldingId);
-
-  //               locationTitle.push({
-  //                 key: result.BuldingId,
-  //                 value: result.BuildingName,
-  //               });
-  //             });
-  //           });
-  //           resolve(locationTitle);
-  //           console.log(locationTitle);
-  //         },
-  //         (error: any): void => {
-  //           reject("error occured" + error);
-  //         }
-  //       );
-  //   });
-  // }
   public GetBuilding(context: WebPartContext): Promise<any> {
-    console.log("roomid");
-    //
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
-
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
 
-    //let resturl:string=context.
-    var locationTitle: any[] = [];
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json.value);
+        return json?.value;
+      }) as Promise<any>;
+  }
+  public GetSpecificBuilding(
+    context: WebPartContext,
+    buildingId: String
+  ): Promise<any[]> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items?$filter=BuldingId eq '" +
+      buildingId +
+      "'";
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
+  public Createbuilding(
+    context: WebPartContext,
+    buildingInfo: object
+  ): Promise<String> {
+    console.log(buildingInfo);
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Building')/items";
+    const body: string = JSON.stringify(buildingInfo);
+    const options: ISPHttpClientOptions = {
+      body: body,
+    };
+
+    return new Promise<String>(async (resolve, reject) => {
+      context.spHttpClient
+        .post(locationUrl, SPHttpClient.configurations.v1, options)
+        .then((response: SPHttpClientResponse) => {
+          response.json().then(
+            (result: any) => {
+              resolve("Item with id created sucessfuly");
+            },
+            (error: any) => {
+              reject("Error ocured" + error);
+            }
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  }
+  public Createroom(
+    context: WebPartContext,
+    roomInfo: object
+  ): Promise<String> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Rooms')/items";
+    const body: string = JSON.stringify(roomInfo);
+    console.log(roomInfo);
+    const options: ISPHttpClientOptions = {
+      headers: {
+        Accept: "application/json;odata=nometadata",
+        "content-type": "application/json;odata=nometadata",
+        "odata-version": "",
+      },
+      body: body,
+    };
+
+    return new Promise<String>(async (resolve, reject) => {
+      context.spHttpClient
+        .post(locationUrl, SPHttpClient.configurations.v1, options)
+        .then((response: SPHttpClientResponse) => {
+          response.json().then(
+            (result: any) => {
+              resolve("Item with id created sucessfuly");
+            },
+            (error: any) => {
+              reject("Error ocured" + error);
+            }
+          );
+        });
+    });
+  }
+  public GetAllRooms(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$select=*,Building/BuildingName&$expand=Building";
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -89,87 +118,12 @@ export class SPOperations {
         return json?.value;
       }) as Promise<any>;
   }
-
-  public Createbuilding(
-    context: WebPartContext,
-    buildingTitle: object
-  ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
+  public Getrooms(context: WebPartContext, buildingId: String): Promise<any[]> {
+    console.log(buildingId);
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Building')/items";
-    const body: string = JSON.stringify(buildingTitle);
-    const options: ISPHttpClientOptions = {
-      headers: {
-        Accept: "application/json;odata=nometadata",
-        "content-type": "application/json;odata=nometadata",
-        "odata-version": "",
-      },
-      body: body,
-    };
-
-    return new Promise<String>(async (resolve, reject) => {
-      context.spHttpClient
-        .post(locationUrl, SPHttpClient.configurations.v1, options)
-        .then((response: SPHttpClientResponse) => {
-          response.json().then(
-            (result: any) => {
-              resolve("Item with id created sucessfuly");
-            },
-            (error: any) => {
-              reject("Error ocured" + error);
-            }
-          );
-        });
-    });
-  }
-  public Createroom(
-    context: WebPartContext,
-    roomTitle: object
-  ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
-    let locationUrl: string =
-      context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Rooms')/items";
-    const body: string = JSON.stringify(roomTitle);
-    const options: ISPHttpClientOptions = {
-      headers: {
-        Accept: "application/json;odata=nometadata",
-        "content-type": "application/json;odata=nometadata",
-        "odata-version": "",
-      },
-      body: body,
-    };
-
-    return new Promise<String>(async (resolve, reject) => {
-      context.spHttpClient
-        .post(locationUrl, SPHttpClient.configurations.v1, options)
-        .then((response: SPHttpClientResponse) => {
-          response.json().then(
-            (result: any) => {
-              resolve("Item with id created sucessfuly");
-            },
-            (error: any) => {
-              reject("Error ocured" + error);
-            }
-          );
-        });
-    });
-  }
-  public Getrooms(context: WebPartContext, roomid: String): Promise<any[]> {
-    console.log("roomid" + roomid);
-    //
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
-
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
-    let locationUrl: string =
-      context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter=BuldingId eq '" +
-      roomid +
-      "'";
-
-    //let resturl:string=context.
-    var locationTitle: any[] = [];
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter=Building eq " +
+      buildingId;
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -181,15 +135,14 @@ export class SPOperations {
         return json?.value;
       }) as Promise<any>;
   }
-  public Creatshelf(
+  public Createshelf(
     context: WebPartContext,
-    roomTitle: object
+    shelfInfo: object
   ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Shelf')/items";
-    const body: string = JSON.stringify(roomTitle);
+    const body: string = JSON.stringify(shelfInfo);
     const options: ISPHttpClientOptions = {
       headers: {
         Accept: "application/json;odata=nometadata",
@@ -214,21 +167,27 @@ export class SPOperations {
         });
     });
   }
+  public GetAllShelfs(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$select=*,Room/RoomName&$expand=Room";
 
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
   public Getshelfs(context: WebPartContext, roomid: String): Promise<any[]> {
-    console.log("roomid" + roomid);
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq (" +
-
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq '" +
       roomid +
       "'";
-
-    //let resturl:string=context.
-    var locationTitle: any[] = [];
-
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
@@ -241,13 +200,12 @@ export class SPOperations {
   }
   public Creatboxfile(
     context: WebPartContext,
-    roomTitle: object
+    boxInfo: object
   ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getByTitle('BoxFile')/items";
-    const body: string = JSON.stringify(roomTitle);
+    const body: string = JSON.stringify(boxInfo);
     const options: ISPHttpClientOptions = {
       headers: {
         Accept: "application/json;odata=nometadata",
@@ -272,19 +230,27 @@ export class SPOperations {
         });
     });
   }
-  public Getboxfiles(context: WebPartContext, roomid: String): Promise<any[]> {
-    console.log("roomid" + roomid);
+  public GetAllBoxFiles(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('BoxFile')/items?$select=*,Shelf/ShelfName&$expand=Shelf";
 
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
+  public Getboxfiles(context: WebPartContext, shelfId: String): Promise<any[]> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getbytitle('BoxFile')/items?$filter=ShelfId eq '" +
-      roomid +
+      shelfId +
       "'";
-
-    //let resturl:string=context.
-    var locationTitle: any[] = [];
-
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
@@ -295,15 +261,29 @@ export class SPOperations {
         return json.value;
       }) as Promise<any>;
   }
-  public Creatfile(
+  public GetAllFiles(context: WebPartContext): Promise<any> {
+    let locationUrl: string =
+      context.pageContext.web.absoluteUrl +
+      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('File')/items?$select=*,BoxFile/BoxFileName&$expand=BoxFile";
+
+    return context.spHttpClient
+      .get(locationUrl, SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => {
+        return response?.json();
+      })
+      .then((json: any) => {
+        console.log(json);
+        return json?.value;
+      }) as Promise<any>;
+  }
+  public Createfile(
     context: WebPartContext,
-    roomTitle: object
+    fileInfo: object
   ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
       "/sites/demo/physicalLocation/_api/web/lists/getByTitle('File')/items";
-    const body: string = JSON.stringify(roomTitle);
+    const body: string = JSON.stringify(fileInfo);
     const options: ISPHttpClientOptions = {
       headers: {
         Accept: "application/json;odata=nometadata",
