@@ -197,7 +197,7 @@ function viewLocations({ spops, context, words }) {
             <br />
             <div className="row">
 
-                <div className="col-md-3 sidebar ml-2" id="sidebar">
+                <div className="col-md-3 sidebar ml-2 mt-2" style={{ height: "max-content" }} id="sidebar">
                     <ul className="list-unstyled components " >
                         <li>
                             <a onClick={
@@ -230,15 +230,12 @@ function viewLocations({ spops, context, words }) {
                                 onClickFile
                             }>{words.Files}</a>
 
-                            {/* <button className="btn btn-info m-3"  type='button' >Files</button> */}
                         </li>
                     </ul>
-                 </div>
+                </div>
 
                 <div className="col-md-8">
                     {defaults && buildings && buildingTable}
-
-                    {!defaults && buildings && buildingTable}
                     {rooms && roomTable}
                     {shelfs && shelfTable}
                     {boxFiles && boxFileTable}
