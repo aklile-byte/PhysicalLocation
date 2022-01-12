@@ -87,6 +87,14 @@ export default class RecordDashboard extends React.Component<
     return (
       <>
         {/* for rendering incoming and outgoing tabs */}
+        <div className="container">
+          <button className="btn btn-primary" onClick={this.setLangEnglish}>
+            EN
+          </button>
+          <button className="btn btn-warning" onClick={this.setLangAmharic}>
+            AM
+          </button>
+        </div>
         <Tabs defaultIndex={1}>
           <TabList>
             <Tab>Add Location</Tab>
@@ -99,21 +107,11 @@ export default class RecordDashboard extends React.Component<
                 description={this.props.description}
                 context={this.props.context}
                 webURL={this.props.webURL}
+                words={this.state.words}
               />
             }
           </TabPanel>
           <TabPanel>
-            {/* {this.state.buildingRecords && (
-              <Building
-                context={this.props.context}
-                words={this.state.words}
-                //showModal={this.showModal}
-                data={this.state.buildingRecords}
-                //setRecords={this.addChangeToIncommingRecords}
-                //updateRecordInfo={this.updateIncomingRecordInfo}
-                columns={buildingColumns}
-              />
-            )} */}
             <ViewLocations
               spops={this._spOps}
               context={this.props.context}

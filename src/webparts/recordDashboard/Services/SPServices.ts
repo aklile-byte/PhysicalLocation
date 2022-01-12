@@ -9,9 +9,8 @@ import { IDropdownOption } from "office-ui-fabric-react";
 export class SPOperations {
   public GetAllList(context: WebPartContext): Promise<any[]> {
     let locationUrl: string =
-      context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists?select=Title";
-    //let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
+      context.pageContext.web.absoluteUrl + "/_api/web/lists?select=Title";
+    //let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/lists/getbytitle('Building')/items";
     var locationTitle: any[] = [];
     return new Promise<any[]>(async (resolve, reject) => {
       context.spHttpClient
@@ -32,10 +31,10 @@ export class SPOperations {
     });
   }
   // public GetBuilding(context: WebPartContext): Promise<any[]> {
-  //   // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+  //   // let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/getByTitle('Building')/items";
   //   let locationUrl: string =
   //     context.pageContext.web.absoluteUrl +
-  //     "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
+  //     "/_api/web/lists/getbytitle('Building')/items";
 
   //   //let resturl:string=context.
   //   var locationTitle: any[] = [];
@@ -70,12 +69,12 @@ export class SPOperations {
   public GetBuilding(context: WebPartContext): Promise<any> {
     console.log("roomid");
     //
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
+    // "/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
 
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items";
+      "/_api/web/lists/getbytitle('Building')/items";
 
     //let resturl:string=context.
     var locationTitle: any[] = [];
@@ -95,7 +94,7 @@ export class SPOperations {
   ): Promise<any[]> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Building')/items?$filter=BuldingId eq '" +
+      "/_api/web/lists/getbytitle('Building')/items?$filter=BuldingId eq '" +
       buildingId +
       "'";
     return context.spHttpClient
@@ -113,10 +112,9 @@ export class SPOperations {
     context: WebPartContext,
     buildingTitle: object
   ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Building')/items";
+      "/_api/web/lists/getByTitle('Building')/items";
     const body: string = JSON.stringify(buildingTitle);
     const options: ISPHttpClientOptions = {
       headers: {
@@ -146,10 +144,10 @@ export class SPOperations {
     context: WebPartContext,
     roomTitle: object
   ): Promise<String> {
-    //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
+    console.log(roomTitle);
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Rooms')/items";
+      "/_api/web/lists/getByTitle('Rooms')/items";
     const body: string = JSON.stringify(roomTitle);
     const options: ISPHttpClientOptions = {
       headers: {
@@ -178,7 +176,7 @@ export class SPOperations {
   public GetAllRooms(context: WebPartContext): Promise<any> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$select=*,Building/BuildingName&$expand=Building";
+      "/_api/web/lists/getbytitle('Rooms')/items?$select=*,Building/BuildingName&$expand=Building";
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -192,12 +190,12 @@ export class SPOperations {
   public Getrooms(context: WebPartContext, roomid: String): Promise<any[]> {
     console.log("roomid" + roomid);
     //
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
+    // "/_api/web/lists/getbytitle('Rooms')/items?$filter[BuldingId] eq(" +//
 
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Rooms')/items?$filter=BuldingId eq '" +
+      "/_api/web/lists/getbytitle('Rooms')/items?$filter=Building eq '" +
       roomid +
       "'";
 
@@ -221,7 +219,7 @@ export class SPOperations {
     //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('Shelf')/items";
+      "/_api/web/lists/getByTitle('Shelf')/items";
     const body: string = JSON.stringify(roomTitle);
     const options: ISPHttpClientOptions = {
       headers: {
@@ -250,7 +248,7 @@ export class SPOperations {
   public GetAllShelfs(context: WebPartContext): Promise<any> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$select=*,Room/RoomName&$expand=Room";
+      "/_api/web/lists/getbytitle('Shelf')/items?$select=*,Room/RoomName&$expand=Room";
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -265,12 +263,12 @@ export class SPOperations {
 
   public Getshelfs(context: WebPartContext, roomid: String): Promise<any[]> {
     console.log("roomid" + roomid);
-    // "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq (" +
+    // "/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq (" +
 
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq '" +
+      "/_api/web/lists/getbytitle('Shelf')/items?$filter=RoomId eq '" +
       roomid +
       "'";
 
@@ -294,7 +292,7 @@ export class SPOperations {
     //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('BoxFile')/items";
+      "/_api/web/lists/getByTitle('BoxFile')/items";
     const body: string = JSON.stringify(roomTitle);
     const options: ISPHttpClientOptions = {
       headers: {
@@ -323,7 +321,7 @@ export class SPOperations {
   public GetAllBoxFiles(context: WebPartContext): Promise<any> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('BoxFile')/items?$select=*,Shelf/ShelfName&$expand=Shelf";
+      "/_api/web/lists/getbytitle('BoxFile')/items?$select=*,Shelf/ShelfName&$expand=Shelf";
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -338,10 +336,10 @@ export class SPOperations {
   public Getboxfiles(context: WebPartContext, roomid: String): Promise<any[]> {
     console.log("roomid" + roomid);
 
-    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/sites/demo/physicalLocation/_api/web/getByTitle('Building')/items";
+    // let locationUrl:string=context.pageContext.web.absoluteUrl+"/_api/web/getByTitle('Building')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('BoxFile')/items?$filter=ShelfId eq '" +
+      "/_api/web/lists/getbytitle('BoxFile')/items?$filter=ShelfId eq '" +
       roomid +
       "'";
 
@@ -361,7 +359,7 @@ export class SPOperations {
   public GetAllFiles(context: WebPartContext): Promise<any> {
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getbytitle('File')/items?$select=*,BoxFile/BoxFileName&$expand=BoxFile";
+      "/_api/web/lists/getbytitle('File')/items?$select=*,BoxFile/BoxFileName&$expand=BoxFile";
 
     return context.spHttpClient
       .get(locationUrl, SPHttpClient.configurations.v1)
@@ -380,7 +378,7 @@ export class SPOperations {
     //let restApiUrl:string=context.pageContext.web.absoluteUrl +"/_api/web/lists/getByTitle('"+ listTitle+"')/items";
     let locationUrl: string =
       context.pageContext.web.absoluteUrl +
-      "/sites/demo/physicalLocation/_api/web/lists/getByTitle('File')/items";
+      "/_api/web/lists/getByTitle('File')/items";
     const body: string = JSON.stringify(roomTitle);
     const options: ISPHttpClientOptions = {
       headers: {

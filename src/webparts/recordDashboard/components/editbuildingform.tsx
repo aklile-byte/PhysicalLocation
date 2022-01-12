@@ -14,36 +14,18 @@ const EditBuilding = ({
     recordDetails.BuildingName
   );
   const [buildingId, setbuildingId] = React.useState(recordDetails.BuldingId);
-  //   const [ReferenceNumber, setReferenceNumber] = React.useState(
-  //     recordDetails.ReferenceNumber
-  //   );
-  //   const [IncomingRecordDate, setIncomingRecordDate] = React.useState(
-  //     recordDetails.IncomingRecordDate
-  //   );
-  //   const [Subject, setSubject] = React.useState(recordDetails.Subject);
   const onSubmit = (event) => {
     event.preventDefault();
     const data = {
       Title: buildingname,
       BuldingId: buildingId,
       BuildingName: buildingname,
-
-      //   SendingOrganizationName: sendingOrg,
-      //   ReferenceNumber: ReferenceNumber,
-      //   IncomingRecordDate: IncomingRecordDate,
-      //   Subject: Subject,
     };
     editAndGetBuilding(context, recordDetails.BuldingId, data).then(
       (record) => {
-        console.log(record);
-        console.log(index);
         toast("Updated Successfully");
-        // updateRecordInfo(record, index);
         setbuildingname(null);
-        // setReferenceNumber(null);
         setbuildingId(null);
-        // setIncomingRecordDate(null);
-        // setSubject(null);
         hideRecordModal();
       }
     );
@@ -93,56 +75,6 @@ const EditBuilding = ({
                 />
               </div>
             </div>
-            <br />
-
-            <br />
-            {/* <div className="form-group row">
-              <label className="col-sm-4 col-form-label">
-                {words.referenceNumber}
-              </label>
-              <div className="col-sm-7">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="exampleInputPassword1"
-                  value={ReferenceNumber}
-                  onChange={(event) => setReferenceNumber(event.target.value)}
-                />
-              </div>
-            </div> */}
-            <br />
-            {/* <div className="form-group row">
-              <label className="col-sm-4 col-form-label">
-                {words.IncomingRecordDate}
-              </label>
-              <div className="col-sm-7">
-                <input
-                  type="date"
-                  className="form-control"
-                  id="exampleInputPassword1"
-                  value={IncomingRecordDate}
-                  onChange={(event) =>
-                    setIncomingRecordDate(event.target.value)
-                  }
-                />
-              </div>
-            </div> */}
-
-            <br />
-            {/* <div className="form-group row">
-              <label className="col-sm-4 col-form-label">{words.subject}</label>
-              <div className="col-sm-7">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="exampleInputPassword1"
-                  value={Subject}
-                  onChange={(event) => setSubject(event.target.value)}
-                />
-              </div>
-            </div> */}
-            <br />
-
             <br />
             <hr />
             <div className="form-group">

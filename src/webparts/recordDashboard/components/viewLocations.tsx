@@ -93,14 +93,6 @@ function viewLocations({ spops, context, words }) {
             setFiles(data)
         });
     }
-
-    // React.useEffect(() => {
-    //     getBuildings()
-    //     getRooms()
-    //     getShelfs()
-    //     getBoxFiles()
-    //     getFiles()
-    // }, [])
     let buildingTable = (
         <Building
             context={context}
@@ -175,6 +167,7 @@ function viewLocations({ spops, context, words }) {
         setShelfs(null)
         setBoxFiles(null)
     }
+    getBuildings()
     return (
         <div>
             <button className="btn btn-success m-3" onClick={
