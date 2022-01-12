@@ -1,7 +1,7 @@
 import * as React from "react";
 import { editAndGetBuilding } from "./actions";
 import { toast } from "react-toastify";
-const EditBuilding = ({
+const EditRoom = ({
   words,
   context,
   hideRecordModal,
@@ -32,7 +32,7 @@ const EditBuilding = ({
     <div className="container-fluid ">
       <div className="row justify-content-center text-center ">
         <h4>
-          <b>{words.EditBuilding}</b>
+          <b>{words.editRecord} Edit Building</b>
         </h4>
       </div>
       <hr />
@@ -41,7 +41,8 @@ const EditBuilding = ({
           <form onSubmit={(event) => onSubmit(event)}>
             <div className="form-group row">
               <label className="col-sm-4 col-form-label">
-                {words.BuildingName}
+                {words.fileName}
+                buildingname
               </label>
               <div className="col-sm-7">
                 <input
@@ -58,7 +59,8 @@ const EditBuilding = ({
             <br />
             <div className="form-group row">
               <label className="col-sm-4 col-form-label">
-                {words.BuldingId}
+                {words.senderOrg}
+                buildingid
               </label>
               <div className="col-sm-7">
                 <input
@@ -99,4 +101,4 @@ const EditBuilding = ({
   );
 };
 
-export default EditBuilding;
+export default EditRoom;

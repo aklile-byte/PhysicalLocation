@@ -20,8 +20,11 @@ export const English = {
   FileName: "File Name",
   FileId: "File Id",
   AddFile: "AddFile",
-  BuldingId: "BuldingId",
-  BuildingName: "BuildingName",
+  BuldingId: "Bulding Id",
+  BuildingName: "Building Name",
+  cancel: "Cancel",
+  submit: "Submit",
+  EditBuilding: "Edit Building",
 };
 export const AMHARIC = {
   selectlocation: "ቦታ ምረጥ",
@@ -47,4 +50,7 @@ export const AMHARIC = {
   AddFile: "ፋይል ጨምር",
   BuldingId: "ህንጻ ቁጥር",
   BuildingName: " ህንጻ ስም",
+  cancel: "ሰርዝ",
+  submit: "አስገባ",
+  EditBuilding: "ህንጻ አሥተካክል",
 };
