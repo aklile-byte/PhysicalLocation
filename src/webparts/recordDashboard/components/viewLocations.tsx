@@ -9,12 +9,31 @@ import { roomColumns } from "./roomColumn"
 import { shelfColumns } from "./shelfColumn"
 import { boxFileColumn } from "./boxFileColumn"
 import { fileColumns } from "./fileColumn"
+import './main.css';
 function viewLocations({ spops, context, words }) {
     const [buildings, setBuildings] = React.useState(null)
+    const [defaults, setDefaults] = React.useState(true)
     const [rooms, setRooms] = React.useState(null)
     const [shelfs, setShelfs] = React.useState(null)
     const [boxFiles, setBoxFiles] = React.useState(null)
     const [files, setFiles] = React.useState(null)
+
+    React.useEffect(() => {
+        spops.GetBuilding(context).then((result) => {
+            console.log(result);
+            const data: any = [];
+            result.map((item) => {
+                data.push({
+                    Id: item.Id,
+                    Title: item.Title,
+                    BuldingId: item.BuldingId,
+                    BuildingName: item.BuildingName,
+                });
+            });
+            setBuildings(data)
+        });
+    }, []);
+
     const getBuildings = () => {
         spops.GetBuilding(context).then((result) => {
             console.log(result);
@@ -143,6 +162,7 @@ function viewLocations({ spops, context, words }) {
     const onClickBuilding = () => {
         getBuildings()
         setRooms(null)
+        setDefaults(null);
         setShelfs(null)
         setBoxFiles(null)
         setFiles(null)
@@ -150,6 +170,7 @@ function viewLocations({ spops, context, words }) {
     const onClickRoom = () => {
         getRooms()
         setBuildings(null)
+        setDefaults(null);
         setShelfs(null)
         setBoxFiles(null)
         setFiles(null)
@@ -157,6 +178,7 @@ function viewLocations({ spops, context, words }) {
     const onClickShelf = () => {
         getShelfs()
         setBuildings(null)
+        setDefaults(null);
         setRooms(null)
         setBoxFiles(null)
         setFiles(null)
@@ -164,6 +186,7 @@ function viewLocations({ spops, context, words }) {
     const onClickBoxFile = () => {
         getBoxFiles()
         setBuildings(null)
+        setDefaults(null);
         setRooms(null)
         setShelfs(null)
         setFiles(null)
@@ -171,32 +194,75 @@ function viewLocations({ spops, context, words }) {
     const onClickFile = () => {
         getFiles()
         setBuildings(null)
+        setDefaults(null);
         setRooms(null)
         setShelfs(null)
         setBoxFiles(null)
     }
     return (
         <div>
-            <button className="btn btn-success m-3" onClick={
-                onClickBuilding
-            } type='button' >Buildings</button>
-            <button className="btn btn-primary m-3" onClick={
-                onClickRoom
-            } type='button' >Rooms</button>
-            <button className="btn btn-warning m-3" onClick={
-                onClickShelf
-            } type='button' >Shelfs</button>
-            <button className="btn btn-danger m-3" onClick={
-                onClickBoxFile
-            } type='button' >BoxFiles</button>
-            <button className="btn btn-info m-3" onClick={
-                onClickFile
-            } type='button' >Files</button>
-            {buildings && buildingTable}
-            {rooms && roomTable}
-            {shelfs && shelfTable}
-            {boxFiles && boxFileTable}
-            {files && fileTable}
+            <br />
+            <br />
+            <div className="row">
+
+                <div className="col-md-3 sidebar ml-2" id="sidebar">
+                    <ul className="list-unstyled components " >
+                        <li>
+                            <a onClick={
+                                onClickBuilding
+                            } type='button' >Buildings</a>
+                        </li>
+                        <hr />
+                        <li>
+                            <a onClick={
+                                onClickRoom
+                            } type='button' >Rooms</a>
+                        </li>
+                        <hr />
+                        <li>
+                            <a onClick={
+                                onClickShelf
+                            } type='button' >Shelfs</a>
+                        </li>
+                        <hr />
+
+                        <li>
+                            <a onClick={
+                                onClickBoxFile
+                            } type='button' >BoxFiles</a>
+                        </li>
+                        <hr />
+
+                        <li>
+                            <a type="button" onClick={
+                                onClickFile
+                            }>Files</a>
+
+                            {/* <button className="btn btn-info m-3"  type='button' >Files</button> */}
+                        </li>
+                    </ul>
+
+
+
+
+
+                </div>
+
+                <div className="col-md-8">
+                    {defaults && buildings && buildingTable}
+
+                    {!defaults && buildings && buildingTable}
+                    {rooms && roomTable}
+                    {shelfs && shelfTable}
+                    {boxFiles && boxFileTable}
+                    {files && fileTable}
+
+                </div>
+
+
+            </div>
+
+
         </div>
     )
 }

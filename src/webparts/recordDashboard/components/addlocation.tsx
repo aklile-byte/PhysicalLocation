@@ -141,19 +141,7 @@ export default class Addlocation extends React.Component<
       this.setState({ physicalLoctionListTiltle: result });
     });
   }
-  // public componentDidMount() {
-  //   this._spOps.GetAllList(this.props.context).then((result: any[]) => {
-  //     this.setState({ physicalLoctionListTiltle: result });
-  //   });
-  //   // this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
-  //   //   this.setState({ buildingListTitle: result });
-  //   // });
-  //   // this._spOps
-  //   //   .Getrooms(this.props.context, this.state.selectedroomid)
-  //   //   .then((result: any[]) => {
-  //   //     this.setState({ roomlistTitle: result });
-  //   //   });
-  // }
+  
 
   public onChangebuildingname = (e) => {
     this.setState({
@@ -834,6 +822,11 @@ export default class Addlocation extends React.Component<
 
   // }
 
+  clearSelection()
+  {
+    (document.getElementById('dropdownMain') as HTMLSelectElement).options[0].selected= true;
+  }
+
   setBuildingRecords = () => {
     this._spOps.GetBuilding(this.props.context).then((result: any[]) => {
       // this.setState({ buildingListTitle: result });
@@ -868,31 +861,17 @@ export default class Addlocation extends React.Component<
 
     return (
       <>
-        <div className="container">
+        {/* <div className="container">
           <button className="btn btn-primary" onClick={this.setLangEnglish}>
             EN
           </button>
           <button className="btn btn-warning" onClick={this.setLangAmharic}>
             AM
           </button>
-        </div>
-        <div>
-          {/* <div className="dropdown">
-  <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Add Location
-    <span className="caret"></span>
-  </button>
-  <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-    {this.mycontry.myarry.map(data=>(
-     
-      <li><a href="#">{data}</a></li>
-
-    ))}
-    
+        </div> */}
+        <div className="row mt-3">
    
-  </ul>
-</div> */}
-          <form
+          <form className="col-md-6 col-md-offset-3"
           // onSubmit={handleSubmit(this.onSubmit)}
           >
             <div className="form-group">
@@ -900,7 +879,7 @@ export default class Addlocation extends React.Component<
               <select
                 className="form-control"
                 aria-label="Default select example"
-                id="dropdown"
+                id="dropdownMain"
                 onChange={(e) => this.selected(e)}
               >
                 <option selected>Open this select menu</option>
@@ -927,7 +906,7 @@ export default class Addlocation extends React.Component<
           </form>
         </div>
         {this.state.buldingdivcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             <div className="form-group ">
               <div className="form-group row">
                 <label className="col-sm-2 col-form-label">
@@ -994,6 +973,7 @@ export default class Addlocation extends React.Component<
                   // this.setState({ selectedvalue: "Building" });
                   this.setState({ buildingidError: "" });
                   this.setState({ buildingnameError: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.state.words.Cancel}
@@ -1002,7 +982,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.roomcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
@@ -1085,6 +1065,7 @@ export default class Addlocation extends React.Component<
                   // this.setState({ selectedvalue: "Rooms" });
                   this.setState({ roomidError: "" });
                   this.setState({ roomnameError: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.state.words.Cancel}
@@ -1093,7 +1074,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.shelfcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
@@ -1215,6 +1196,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ shelfidError: "" });
                   this.setState({ roomidforshelfError: "" });
                   this.roomidforshelf = "";
+                  this.clearSelection();
                 }}
               >
                 {this.state.words.Cancel}
@@ -1223,7 +1205,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.boxfilecontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
@@ -1366,6 +1348,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ boxfileidError: "" });
                   this.setState({ boxfilenameError: "" });
                   this.setState({ selectedshelfid: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.state.words.Cancel}
@@ -1374,7 +1357,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.filecontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.state.words.Selectbuilding}</label>
@@ -1537,6 +1520,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ filenameError: "" });
                   this.setState({ selectedshelfid: "" });
                   this.boxfileforfile = "";
+                  this.clearSelection();
                 }}
               >
                 {this.state.words.Cancel}

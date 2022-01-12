@@ -20,8 +20,7 @@ const Building = ({
           <br />
         </div>
       </div> */}
-      <br />
-      <br />
+    
       <div className="row table-overflow">
         <div className="col-12">
           <Table

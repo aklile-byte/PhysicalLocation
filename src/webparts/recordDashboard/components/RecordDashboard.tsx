@@ -3,6 +3,7 @@ import { IRecordDashboardProps } from "./IRecordDashboardProps";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./main.css";
+import './modal.css';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { English, AMHARIC } from "./words";
@@ -86,6 +87,15 @@ export default class RecordDashboard extends React.Component<
 
     return (
       <>
+
+        <div className="container text-center">
+          <button className="btn btn-primary" onClick={this.setLangEnglish} style={{"margin":"10px"}}>
+            EN
+          </button>
+          <button className="btn btn-warning" onClick={this.setLangAmharic} style={{"margin":"10px"}}>
+            AM
+          </button>
+        </div>
         {/* for rendering incoming and outgoing tabs */}
         <Tabs defaultIndex={1}>
           <TabList>
