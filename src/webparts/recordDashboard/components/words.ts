@@ -22,6 +22,13 @@ export const English = {
   AddFile: "AddFile",
   BuldingId: "BuldingId",
   BuildingName: "BuildingName",
+  AddLocation:"Add Location",
+  ViewLocation:"View Location",
+  Buildings:"Buildings",
+  Rooms:"Rooms",
+  Shelfs:"Shelfs",
+  BoxFiles:"Box Files",
+  Files:"Files"
 };
 export const AMHARIC = {
   selectlocation: "ቦታ ምረጥ",
@@ -47,4 +54,11 @@ export const AMHARIC = {
   AddFile: "ፋይል ጨምር",
   BuldingId: "ህንጻ ቁጥር",
   BuildingName: " ህንጻ ስም",
+  AddLocation:"አካባቢ ጨምር",
+  ViewLocation:"አካባቢ ተመልከት",
+  Buildings:"ሕንፃዎች",
+  Rooms:"ክፍሎች",
+  Shelfs:"መደርደሪያዎች",
+  BoxFiles:"ሳጥን ፋይሎች",
+  Files:"ፋይሎች"
 };

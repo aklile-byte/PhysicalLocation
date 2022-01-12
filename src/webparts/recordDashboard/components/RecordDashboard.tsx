@@ -12,7 +12,7 @@ import Addlocation from "./addlocation";
 import { buildingColumns } from "./buildingcolumns";
 import Building from "./buildingtable";
 import { SPOperations } from "../Services/SPServices";
-import ViewLocations from "./viewLocations";
+import ViewLocations from "./viewLocations";import { words } from "lodash";
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -87,18 +87,18 @@ export default class RecordDashboard extends React.Component<
     return (
       <>
         {/* for rendering incoming and outgoing tabs */}
-        <div className="container">
-          <button className="btn btn-primary" onClick={this.setLangEnglish}>
+        <div className="container text-center">
+          <button className="btn bg-info" onClick={this.setLangEnglish} style={{"margin":"10px", "color":"white"}}>
             EN
           </button>
-          <button className="btn btn-warning" onClick={this.setLangAmharic}>
+          <button className="btn btn-success" onClick={this.setLangAmharic} style={{"margin":"10px"}}>
             AM
           </button>
         </div>
         <Tabs defaultIndex={1}>
           <TabList>
-            <Tab>Add Location</Tab>
-            <Tab>view Location</Tab>
+            <Tab>{this.state.words.AddLocation}</Tab>
+            <Tab>{this.state.words.ViewLocation}</Tab>
           </TabList>
 
           <TabPanel>
