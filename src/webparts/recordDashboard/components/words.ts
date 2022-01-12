@@ -25,6 +25,14 @@ export const English = {
   cancel: "Cancel",
   submit: "Submit",
   EditBuilding: "Edit Building",
+
+  AddLocation: "Add Location",
+  ViewLocation: "View Location",
+  Buildings: "Buildings",
+  Rooms: "Rooms",
+  Shelfs: "Shelfs",
+  BoxFiles: "Box Files",
+  Files: "Files",
 };
 export const AMHARIC = {
   selectlocation: "ቦታ ምረጥ",
@@ -53,4 +61,11 @@ export const AMHARIC = {
   cancel: "ሰርዝ",
   submit: "አስገባ",
   EditBuilding: "ህንጻ አሥተካክል",
+  AddLocation: "አካባቢ ጨምር",
+  ViewLocation: "አካባቢ ተመልከት",
+  Buildings: "ሕንፃዎች",
+  Rooms: "ክፍሎች",
+  Shelfs: "መደርደሪያዎች",
+  BoxFiles: "ሳጥን ፋይሎች",
+  Files: "ፋይሎች",
 };

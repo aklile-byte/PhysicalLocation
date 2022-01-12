@@ -7,14 +7,15 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import * as pnp from "sp-pnp-js";
 import "./main.css";
 import Modal from "./modal";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer, toast, Bounce } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import "jquery";
 require("bootstrap");
 
 import "react-tabs/style/react-tabs.css";
 import { SPOperations } from "../Services/SPServices";
 import { words } from "lodash";
+import { toast } from "react-toastify";
 
 export interface TableItems {
   physicalLoctionListTiltle: any[];
@@ -423,6 +424,7 @@ export default class Addlocation extends React.Component<
 
   public submitbuilding(e) {
     e.preventDefault();
+    console.log("under submit building");
 
     const isValid: any = this.validate();
 
@@ -439,14 +441,18 @@ export default class Addlocation extends React.Component<
     if (isValid) {
       this._spOps
         .Createbuilding(this.props.context, this.data)
-        .then((result: string) => {
+        .then((result) => {
+          console.log("under response");
+          console.log(result);
           this.data = {};
+          toast("Building Added Succesfully");
         });
       console.log(this.state.boxfilename, this.state.buildingId);
       this.setState({ buildingId: "" });
       this.setState({ buildingname: "" });
       this.setState({ buildingidError: "" });
       this.setState({ buildingnameError: "" });
+      this.clearSelection();
     }
   }
   public submitroom(e) {
@@ -467,12 +473,21 @@ export default class Addlocation extends React.Component<
         .Createroom(this.props.context, this.data)
         .then((result: string) => {
           this.data = {};
+          toast("Room Added Succesfully");
+        },(err) =>
+        {
+          toast.error("Something went wrong!")
+            
+        }).catch((e)=>{
+          toast.error("Something went wrong!")
+
         });
       console.log(this.state.boxfilename, this.state.buildingId);
       this.setState({ roomid: "" });
       this.setState({ roomname: "" });
       this.setState({ roomidError: "" });
       this.setState({ roomnameError: "" });
+      this.clearSelection();
     }
   }
   public submitshelf(e) {
@@ -494,12 +509,21 @@ export default class Addlocation extends React.Component<
         .Creatshelf(this.props.context, this.data)
         .then((result: string) => {
           this.data = {};
+          toast("Shelf Added Succesfully");
+        },(err) =>
+        {
+          toast.error("Something went wrong!")
+            
+        }).catch((e)=>{
+          toast.error("Something went wrong!")
+
         });
       this.setState({ shelfid: "" });
       this.setState({ shelfname: "" });
       this.setState({ shelfidError: "" });
       this.setState({ shelfnameError: "" });
       this.roomidforshelf = "";
+      this.clearSelection();
     }
 
     //             }
@@ -521,6 +545,14 @@ export default class Addlocation extends React.Component<
         .Creatboxfile(this.props.context, this.data)
         .then((result: string) => {
           this.data = {};
+          toast("BoxFile Added Succesfully");
+        },(err) =>
+        {
+          toast.error("Something went wrong!")
+            
+        }).catch((e)=>{
+          toast.error("Something went wrong!")
+
         });
       console.log(this.state.boxfilename, this.state.buildingId);
       this.setState({ boxfileid: "" });
@@ -528,6 +560,7 @@ export default class Addlocation extends React.Component<
       this.setState({ boxfileidError: "" });
       this.setState({ boxfilenameError: "" });
       this.setState({ selectedshelfid: "" });
+      this.clearSelection();
     }
     //             }
   }
@@ -548,6 +581,14 @@ export default class Addlocation extends React.Component<
         .Creatfile(this.props.context, this.data)
         .then((result: string) => {
           this.data = {};
+          toast("File Added Succesfully");
+        },(err) =>
+        {
+          toast.error("Something went wrong!")
+            
+        }).catch((e)=>{
+          toast.error("Something went wrong!")
+
         });
       this.setState({ fileid: "" });
       this.setState({ filename: "" });
@@ -555,6 +596,7 @@ export default class Addlocation extends React.Component<
       this.setState({ filenameError: "" });
       this.setState({ selectedshelfid: "" });
       this.boxfileforfile = "";
+      this.clearSelection();
     }
   }
   public selectbuilding(e) {
@@ -600,6 +642,12 @@ export default class Addlocation extends React.Component<
         console.log(result);
         this.setState({ boxfileTitle: result });
       });
+  }
+
+
+  clearSelection()
+  {
+    (document.getElementById('dropdownMain') as HTMLSelectElement).options[0].selected= true;
   }
 
   newstate = "";
@@ -698,15 +746,14 @@ export default class Addlocation extends React.Component<
     return (
       <>
 
-        <div>
-          <form
-          >
+        <div className="row mt-3">
+          <form className="col-md-6 col-md-offset-3">
             <div className="form-group">
               <label>{this.props.words.selectlocation}</label>
               <select
                 className="form-control"
                 aria-label="Default select example"
-                id="dropdown"
+                id="dropdownMenu"
                 onChange={(e) => this.selected(e)}
               >
                 <option selected>Open this select menu</option>
@@ -718,7 +765,7 @@ export default class Addlocation extends React.Component<
           </form>
         </div>
         {this.state.buldingdivcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             <div className="form-group ">
               <div className="form-group row">
                 <label className="col-sm-2 col-form-label">
@@ -780,6 +827,7 @@ export default class Addlocation extends React.Component<
                   });
                   this.setState({ buildingidError: "" });
                   this.setState({ buildingnameError: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.props.words.Cancel}
@@ -788,7 +836,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.roomcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.props.words.Selectbuilding}</label>
@@ -866,6 +914,7 @@ export default class Addlocation extends React.Component<
                   });
                   this.setState({ roomidError: "" });
                   this.setState({ roomnameError: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.props.words.Cancel}
@@ -874,7 +923,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.shelfcontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.props.words.Selectbuilding}</label>
@@ -980,6 +1029,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ shelfidError: "" });
                   this.setState({ roomidforshelfError: "" });
                   this.roomidforshelf = "";
+                  this.clearSelection();
                 }}
               >
                 {this.props.words.Cancel}
@@ -988,7 +1038,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.boxfilecontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.props.words.Selectbuilding}</label>
@@ -1119,6 +1169,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ boxfileidError: "" });
                   this.setState({ boxfilenameError: "" });
                   this.setState({ selectedshelfid: "" });
+                  this.clearSelection();
                 }}
               >
                 {this.props.words.Cancel}
@@ -1127,7 +1178,7 @@ export default class Addlocation extends React.Component<
           </form>
         )}
         {this.state.filecontainer && (
-          <form>
+          <form className="col-md-6 col-md-offset-3">
             {this.state.stratfrombuilding || (
               <div className="form-group">
                 <label>{this.props.words.Selectbuilding}</label>
@@ -1275,6 +1326,7 @@ export default class Addlocation extends React.Component<
                   this.setState({ filenameError: "" });
                   this.setState({ selectedshelfid: "" });
                   this.boxfileforfile = "";
+                  this.clearSelection();
                 }}
               >
                 {this.props.words.Cancel}
@@ -1282,6 +1334,8 @@ export default class Addlocation extends React.Component<
             </div>
           </form>
         )}
+
+{/* <ToastContainer /> */}
       </>
     );
   }
