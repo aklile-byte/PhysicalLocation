@@ -15,23 +15,7 @@ function viewLocations({ spops, context, words }) {
     const [shelfs, setShelfs] = React.useState(null)
     const [boxFiles, setBoxFiles] = React.useState(null)
     const [files, setFiles] = React.useState(null)
-    const [defaults, setDefaults] = React.useState(true)
 
-    React.useEffect(() => {
-        spops.GetBuilding(context).then((result) => {
-            console.log(result);
-            const data: any = [];
-            result.map((item) => {
-                data.push({
-                    Id: item.Id,
-                    Title: item.Title,
-                    BuldingId: item.BuldingId,
-                    BuildingName: item.BuildingName,
-                });
-            });
-            setBuildings(data)
-        });
-    }, []);
 
     const getBuildings = () => {
         spops.GetBuilding(context).then((result) => {
@@ -153,7 +137,6 @@ function viewLocations({ spops, context, words }) {
     const onClickBuilding = () => {
         getBuildings()
         setRooms(null)
-        setDefaults(null);
         setShelfs(null)
         setBoxFiles(null)
         setFiles(null)
@@ -161,7 +144,6 @@ function viewLocations({ spops, context, words }) {
     const onClickRoom = () => {
         getRooms()
         setBuildings(null)
-        setDefaults(null);
         setShelfs(null)
         setBoxFiles(null)
         setFiles(null)
@@ -169,7 +151,6 @@ function viewLocations({ spops, context, words }) {
     const onClickShelf = () => {
         getShelfs()
         setBuildings(null)
-        setDefaults(null);
         setRooms(null)
         setBoxFiles(null)
         setFiles(null)
@@ -177,7 +158,6 @@ function viewLocations({ spops, context, words }) {
     const onClickBoxFile = () => {
         getBoxFiles()
         setBuildings(null)
-        setDefaults(null);
         setRooms(null)
         setShelfs(null)
         setFiles(null)
@@ -185,7 +165,6 @@ function viewLocations({ spops, context, words }) {
     const onClickFile = () => {
         getFiles()
         setBuildings(null)
-        setDefaults(null);
         setRooms(null)
         setShelfs(null)
         setBoxFiles(null)
@@ -235,8 +214,6 @@ function viewLocations({ spops, context, words }) {
                 </div>
 
                 <div className="col-md-8">
-                    {defaults && buildings && buildingTable}
-
                     {buildings && buildingTable}
                     {rooms && roomTable}
                     {shelfs && shelfTable}
