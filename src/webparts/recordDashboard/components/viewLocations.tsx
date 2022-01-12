@@ -236,6 +236,7 @@ function viewLocations({ spops, context, words }) {
 
                 <div className="col-md-8">
                     {defaults && buildings && buildingTable}
+                    {buildings && buildingTable}
                     {rooms && roomTable}
                     {shelfs && shelfTable}
                     {boxFiles && boxFileTable}
