@@ -16,6 +16,7 @@ function viewLocations({ spops, context, words }) {
     const [boxFiles, setBoxFiles] = React.useState(null)
     const [files, setFiles] = React.useState(null)
 
+    React.useEffect(() => { getBuildings() }, [])
 
     const getBuildings = () => {
         spops.GetBuilding(context).then((result) => {
@@ -169,7 +170,7 @@ function viewLocations({ spops, context, words }) {
         setShelfs(null)
         setBoxFiles(null)
     }
-    getBuildings()
+
     return (
         <div>
             <br />
@@ -221,8 +222,6 @@ function viewLocations({ spops, context, words }) {
                     {files && fileTable}
 
                 </div>
-
-
             </div>
 
 
